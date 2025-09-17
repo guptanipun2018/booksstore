@@ -1,0 +1,23 @@
+.inputContainer {
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.inputLabel {
+  font-size: 14px;
+  color: #6A2B8D;
+  position: absolute;
+  top: -10px;
+  left: 12px;
+  background-color: #F7F8F9;
+  padding: 0 5px;
+}
+
+.inputField {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  background-color: #F7F8F9;
+}
