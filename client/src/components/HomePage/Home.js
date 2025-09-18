@@ -5,8 +5,8 @@ import { useNavigate } from 'react-router-dom';
 const Home = () => {
   const navigate = useNavigate();
 
-  const handleClick = (role, e) => {
-    e.preventDefault();
+  const handleClick = (role) => {
+    console.log(role);
     navigate('/loginhomepage', { state: { role } });
   }
 
@@ -20,14 +20,14 @@ const Home = () => {
         <div className={styles.buttonContainer}>
           <button 
             className={styles.signInButton} 
-            onClick={(e) => handleClick("buyer", e)}
+            onClick={() => handleClick("buyer")}
           > 
             Login as Buyer 
           </button>
 
           <button 
             className={styles.signUpButton} 
-            onClick={(e) => handleClick("seller", e)}
+            onClick={(e) => handleClick("seller")}
           > 
             Login as Seller 
           </button>
