@@ -7,7 +7,7 @@ const Header = () => {
     const {cartCount} = useContext(CartContext);
     const navigate = useNavigate();
     const handleLogout = ()=>{
-        navigate("/loginhomepage");
+        navigate("/");
     }
 
     const goToCart=()=>{
@@ -15,7 +15,7 @@ const Header = () => {
     }
   return (
     <header className={styles.header}>
-      <h2 className={styles.logo} onClick={() => navigate("/")}>MyShop</h2>
+      <h2 className={styles.logo} >My Store</h2>
       <div className={styles.headeractions}>
         <button className={styles.cartbtn} onClick={goToCart}>
           🛒 Cart <span className={styles.cartcount}>{cartCount}</span>

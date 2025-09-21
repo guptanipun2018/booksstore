@@ -1,11 +1,10 @@
 import React, {useState,useContext} from 'react'
-import { useNavigate,useLocation } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import { AuthContext } from '../AuthContext/AuthContext';
 import styles from './SignIn.module.css'
 import { CartContext } from '../CartContext/CartContext';
 import Input from '../../common/Input';
 import axios from 'axios';
-// import {cart} 
 
 const Signin = () => {
   const [email, setEmail] = useState('');
@@ -14,30 +13,27 @@ const Signin = () => {
   const { setCartFromDB } = useContext(CartContext);
   const navigate = useNavigate();
   const [error, setError] = useState("");
-  const location = useLocation();
-  const role = location.state?.role|| "buyer";
   
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const res = await axios.post("http://localhost:5000/api/login", { email, password });
-
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("role", res.data.role);
+  
       login(res.data.user);
-      if (res.data.user?.cart) {
-        setCartFromDB(res.data.user.cart);
-      }
-      if(role==="buyer"){
+      if (res.data.user?.cart) setCartFromDB(res.data.user.cart);
+      if (res.data.role === "buyer") {
         navigate("/bookstore");
-      }else{
+      } else if (res.data.role === "seller") {
         navigate("/seller-dashboard");
       }
-      
     } catch (err) {
       console.error(err.response?.data || err.message);
       setError(err.response?.data?.error || "Login failed");
     }
-  }
+  };
+  
   return (
     <div className={styles.formContainer}>
         <div className={styles.textContainer}>

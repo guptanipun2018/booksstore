@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styles from "./SellerDashboard.module.css";
+import axios from "axios";
 
 const SellerDashboard = ({ onPublish }) => {
   const [book, setBook] = useState({
@@ -11,6 +12,12 @@ const SellerDashboard = ({ onPublish }) => {
 
   const [preview, setPreview] = useState(null);
 
+  const role = localStorage.getItem("role"); // 👈 role check
+  const token = localStorage.getItem("token");
+  if (role !== "seller") {
+    return <h2 className={styles.heading}>❌ Only sellers can publish books</h2>;
+  }
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setBook({ ...book, [name]: value });
@@ -21,12 +28,20 @@ const SellerDashboard = ({ onPublish }) => {
     setPreview(book);
   };
 
-  const handlePublish = () => {
-    if (preview) {
-      onPublish(preview); // Pass book to parent (App / Context)
-      setBook({ image: "", name: "", author: "", price: "" });
+  const handlePublish = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post(
+        "http://localhost:5000/api/books",
+        book,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      alert("✅ Book published successfully!");
+      setBook({ name: "", author: "", price: "", image: "" });
       setPreview(null);
-      alert("Book published successfully!");
+    } catch (err) {
+      console.error(err.response?.data || err.message);
+      alert("❌ Failed to publish book");
     }
   };
 

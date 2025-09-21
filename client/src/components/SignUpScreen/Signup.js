@@ -27,7 +27,7 @@ const Signup = () => {
         role 
       });
 
-      console.log(res.data.user);
+      console.log(role);
 
       // Navigate based on role
       if (role === "buyer") {
@@ -55,18 +55,18 @@ const Signup = () => {
 
           <div>
             <label className={styles.radioHeading}>
-              Are you an Agency?
+              Select One
               <span style={{ color: '#DD4A3D', marginLeft: 0 }}>*</span>
             </label>
             <div className={styles.radioContainer}>
               <Radio 
-                label="Yes" 
-                name="agency" 
+                label="Buyer" 
+                name={"agency"} 
                 checked={role === "seller"} 
                 onChange={() => setRole("seller")} 
               />
               <Radio 
-                label="No" 
+                label="Seller" 
                 name="agency" 
                 checked={role === "buyer"} 
                 onChange={() => setRole("buyer")} 

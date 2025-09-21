@@ -1,11 +1,10 @@
-import { useNavigate } from 'react-router-dom';
+import {useNavigate } from 'react-router-dom';
 import styles from './LoginHome.module.css'
 
 
 
 const Loginhomepage = () => {
     const navigate = useNavigate();
-
     const handleSignIn = (e) => {
       e.preventDefault();
       navigate('/signin');
@@ -19,7 +18,6 @@ const Loginhomepage = () => {
     <div className={styles.container}>
       <div className={styles.textContainer}> 
         <h2 className={styles.heading}> Please LogIn/SignUp </h2>
-        {/* <h5 className={styles.description}> Lorem ipsum dolor sit amet, consectetur adipiscing elit, </h5> */}
       </div>
       
       <div className={styles.buttonContainer}>
