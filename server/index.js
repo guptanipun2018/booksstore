@@ -13,7 +13,7 @@ app.use(cors());
 const SECRET_KEY = "mysecretkey123";
 
 mongoose.connect(
-  "mongodb+srv://nipunofficialcom_db_user:rkPl4RKR8aUyxInQ@cluster0.o3knnjk.mongodb.net/",
+  process.env.MONGODB_URI,
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
