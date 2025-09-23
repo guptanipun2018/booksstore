@@ -6,46 +6,73 @@ export const CartContext = createContext();
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
 
-  // DB se cart set karna
-  const setCartFromDB = (items) => {
-    setCart(items);
+  // Attach token
+  const getAuthConfig = () => {
+    const token = localStorage.getItem("authToken");
+    return {
+      headers: { Authorization: `Bearer ${token}` },
+    };
   };
 
-  // Add to Cart with backend sync
-  const addToCart = async (product, email) => {
+  // Set cart from backend
+  const setCartFromDB = (items) => setCart(items);
+
+  // Add to cart
+  const addToCart = async (book) => {
     try {
-      const res = await axios.post("http://localhost:5000/api/cart/add", {
-        email,
-        product,
-      });
-      setCart(res.data.cart); // DB ka cart state me set karo
+      const product = {
+        productId: book._id.toString(),
+        name: book.name,
+        price: Number(book.price) || 0, // fix NaN
+        image: book.image,
+        quantity: 1,
+      };
+      console.log("Adding product:", product);
+
+      const res = await axios.post(
+        "http://localhost:5000/api/cart/add",
+        { product },
+        getAuthConfig()
+      );
+
+      console.log("Cart after add:", res.data.cart);
+      setCart(res.data.cart);
     } catch (err) {
-      console.error("Error adding to cart", err);
+      console.error("Error adding to cart:", err.response?.data || err.message);
     }
   };
 
-  // Remove from Cart with backend sync
-  const removeFromCart = async (productId, email) => {
+  // Update quantity
+  const updateCartQty = async (productId, action) => {
     try {
-      const res = await axios.post("http://localhost:5000/api/cart/remove", {
-        email,
-        productId,
-      });
-      setCart(res.data.cart); // DB ka cart update kar ke set karo
+      const res = await axios.put(
+        "http://localhost:5000/api/cart/update",
+        { productId, action },
+        getAuthConfig()
+      );
+      setCart(res.data.cart);
     } catch (err) {
-      console.error("Error removing from cart", err);
+      console.error("Error updating cart:", err.response?.data || err.message);
     }
   };
 
-  // Total item count
-  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-  // Total price
-  const cartTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  // Remove item
+  const removeFromCart = async (productId) => {
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/cart/remove",
+        { productId },
+        getAuthConfig()
+      );
+      setCart(res.data.cart);
+    } catch (err) {
+      console.error("Error removing from cart:", err.response?.data || err.message);
+    }
+  };
 
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, removeFromCart, cartCount, cartTotal, setCartFromDB }}
+      value={{ cart, setCartFromDB, addToCart, updateCartQty, removeFromCart }}
     >
       {children}
     </CartContext.Provider>

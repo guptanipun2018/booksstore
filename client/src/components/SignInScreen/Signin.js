@@ -18,7 +18,7 @@ const Signin = () => {
     e.preventDefault();
     try {
       const res = await axios.post("http://localhost:5000/api/login", { email, password });
-      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("authToken", res.data.token);
       localStorage.setItem("role", res.data.role);
   
       login(res.data.user);

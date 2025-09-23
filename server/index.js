@@ -12,7 +12,6 @@ app.use(cors());
 
 const SECRET_KEY = "mysecretkey123";
 
-// MongoDB Connection
 mongoose.connect(
   "mongodb+srv://nipunofficialcom_db_user:rkPl4RKR8aUyxInQ@cluster0.o3knnjk.mongodb.net/",
   {
@@ -24,8 +23,53 @@ mongoose.connect(
 .catch(err => console.error("❌ MongoDB connection error:", err));
 
 const Book = require("./models/book");
+ 
 
-// -------------------- GET ALL BOOKS --------------------
+app.put("/api/cart/update", authMiddleware, async (req, res) => {
+  try {
+    const { productId, action } = req.body; // action = "increment" or "decrement"
+    const user = await User.findById(req.user.id);
+
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const item = user.cart.find(i => i.productId.toString() === productId.toString());
+    if (!item) return res.status(404).json({ error: "Item not found in cart" });
+
+    if (action === "increment") {
+      item.quantity += 1;
+    } else if (action === "decrement") {
+      item.quantity -= 1;
+      if (item.quantity <= 0) {
+        user.cart = user.cart.filter(i => i.productId !== productId);
+      }
+    }
+
+    await user.save();
+    res.json({ message: "Cart updated", cart: user.cart });
+  } catch (err) {
+    res.status(500).json({ error: "Something went wrong" });
+  }
+});
+
+
+app.post("/api/cart/remove", authMiddleware, async (req, res) => {
+  try {
+    const { productId } = req.body;
+    const user = await User.findById(req.user.id);
+
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    user.cart = user.cart.filter(item => item.productId !== productId);
+
+    await user.save();
+    res.json({ message: "Item removed", cart: user.cart });
+  } catch (err) {
+    res.status(500).json({ error: "Something went wrong" });
+  }
+});
+
+
+
 app.get("/api/books", async (req, res) => {
   try {
     const books = await Book.find();
@@ -143,7 +187,7 @@ app.post("/api/login", async (req, res) => {
 
 
 
-// -------------------- CART ROUTES (Protected) --------------------
+
 app.post("/api/cart/add", authMiddleware, async (req, res) => {
   try {
     const { product } = req.body; 
@@ -151,7 +195,7 @@ app.post("/api/cart/add", authMiddleware, async (req, res) => {
 
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    const existing = user.cart.find(item => item.productId === product.productId);
+    const existing = user.cart.find(item => item.productId.toString() === product.productId.toString());
 
     if (existing) {
       existing.quantity += 1;

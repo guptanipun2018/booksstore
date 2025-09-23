@@ -1,10 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styles from "./Bookstore.module.css";
 import Header from "../Header/Header";
 import axios from "axios";
+import { CartContext } from "../CartContext/CartContext";
+import { AuthContext } from "../AuthContext/AuthContext";
 
 const Bookstore = () => {
   const [books, setBooks] = useState([]);
+  const { cart, addToCart, updateCartQty, setCartFromDB } = useContext(CartContext);
+  const { user } = useContext(AuthContext);
+  const userEmail = user?.email;
 
   const fetchBooks = async () => {
     try {
@@ -15,7 +20,7 @@ const Bookstore = () => {
     }
   };
 
-  const handleDecrease = async (id) => {
+  const handleDecreaseBook = async (id) => {
     try {
       await axios.put(`http://localhost:5000/api/books/${id}/decrease`);
       fetchBooks();
@@ -24,7 +29,7 @@ const Bookstore = () => {
     }
   };
 
-  const handleRemove = async (id) => {
+  const handleRemoveBook = async (id) => {
     try {
       await axios.delete(`http://localhost:5000/api/books/${id}`);
       fetchBooks();
@@ -46,18 +51,58 @@ const Bookstore = () => {
         <p>No books available. Please publish from Seller Dashboard.</p>
       ) : (
         <div className={styles.grid}>
-          {books.map((book) => (
-            <div key={book._id} className={styles.card}>
-              <img src={book.image} alt={book.name} />
-              <h3>{book.name}</h3>
-              <p>By {book.author}</p>
-              <p className={styles.price}>₹{book.price}</p>
-              <p>Quantity: {book.quantity || 1}</p>
-              <button className={styles.buyBtn}>Buy Now</button>
-              <button onClick={() => handleDecrease(book._id)}>Decrease Quantity</button>
-              <button onClick={() => handleRemove(book._id)}>Remove</button>
-            </div>
-          ))}
+          {books.map(book => {
+            const cartItem = cart.find(item => item.productId === book._id);
+            const qty = cartItem?.quantity|| 0;
+
+            return (
+              <div key={book._id} className={styles.card}>
+                <div className={styles.imageWrap}>
+                  <img src={book.image} alt={book.name} />
+                </div>
+                <h3>{book.name}</h3>
+                <p>By {book.author}</p>
+
+                <div className={styles.priceRow}>
+                  <p className={styles.price}>₹{book.price}</p>
+                  <p className={styles.quantity}>Quantity: {book.quantity || 1}</p>
+                </div>
+
+                <div className={styles.buttonRow}>
+                  <button className={styles.controlBtn} onClick={() => handleDecreaseBook(book._id)}>Decrease</button>
+                  <button className={styles.controlBtn} onClick={() => handleRemoveBook(book._id)}>Remove</button>
+                </div>
+
+                {/* Add to Cart / Counter */}
+                {qty === 0 ? (
+                  <button
+                    className={styles.addCartBtn}
+                    onClick={() => addToCart(book)}
+                  >
+                    Add to Cart
+                  </button>
+                ) : (
+                  <div className={styles.cartCounter}>
+                    <button
+                      className={styles.counterBtn}
+                      onClick={() => updateCartQty(book._id, "decrement", userEmail)}
+                    >
+                      -
+                    </button>
+                    <span className={styles.counterQty}>{qty}</span>
+                    <button
+                      className={styles.counterBtn}
+                      onClick={() => updateCartQty(book._id, "increment", userEmail)}
+                    >
+                      +
+                    </button>
+                  </div>
+                )}
+
+                <button className={styles.buyBtn}>Buy Now</button>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

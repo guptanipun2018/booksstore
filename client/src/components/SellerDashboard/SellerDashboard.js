@@ -12,11 +12,12 @@ const SellerDashboard = ({ onPublish }) => {
 
   const [preview, setPreview] = useState(null);
 
-  const role = localStorage.getItem("role"); // 👈 role check
+  const role = localStorage.getItem("role");
   const token = localStorage.getItem("token");
   if (role !== "seller") {
     return <h2 className={styles.heading}>❌ Only sellers can publish books</h2>;
   }
+  console.log(role);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

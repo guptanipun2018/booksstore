@@ -37,7 +37,6 @@ const App = () => {
       <CartProvider>
         <BrowserRouter>
           <Routes>
-            {/* <Route path='/' element={<Home />}/> */}
             <Route path='/' element={<Loginhomepage />}/>
             <Route path='/signin' element={<Signin/>}/>
             <Route path='/signup' element={<Signup/>}/>
