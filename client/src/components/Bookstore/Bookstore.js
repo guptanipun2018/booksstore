@@ -13,7 +13,7 @@ const Bookstore = () => {
 
   const fetchBooks = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/books");
+      const res = await axios.get("https://myapp-backend.onrender.com:5000/api/books");
       setBooks(res.data);
     } catch (err) {
       console.error(err.response?.data || err.message);
@@ -22,7 +22,7 @@ const Bookstore = () => {
 
   const handleDecreaseBook = async (id) => {
     try {
-      await axios.put(`http://localhost:5000/api/books/${id}/decrease`);
+      await axios.put(`https://myapp-backend.onrender.com:5000/api/books/${id}/decrease`);
       fetchBooks();
     } catch (err) {
       console.error(err.response?.data || err.message);
@@ -31,7 +31,7 @@ const Bookstore = () => {
 
   const handleRemoveBook = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/books/${id}`);
+      await axios.delete(`https://myapp-backend.onrender.com/api/books/${id}`);
       fetchBooks();
     } catch (err) {
       console.error(err.response?.data || err.message);

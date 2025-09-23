@@ -13,7 +13,7 @@ const Bookcard = ({ book }) => {
   const handleAddToCart = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/cart/add",
+        "https://myapp-backend.onrender.com:5000/api/cart/add",
         { product: { productId: book.id, title: book.title, qty: 1 } },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -26,7 +26,7 @@ const Bookcard = ({ book }) => {
   const handleUpdateCart = async (action) => {
     try {
       const res = await axios.put(
-        "http://localhost:5000/api/cart/update",
+        "https://myapp-backend.onrender.com:5000/api/cart/update",
         { productId: book.id, action }, // action: "increment" or "decrement"
         { headers: { Authorization: `Bearer ${token}` } }
       );

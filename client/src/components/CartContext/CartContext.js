@@ -30,7 +30,7 @@ export const CartProvider = ({ children }) => {
       console.log("Adding product:", product);
 
       const res = await axios.post(
-        "http://localhost:5000/api/cart/add",
+        "https://myapp-backend.onrender.com:5000/api/cart/add",
         { product },
         getAuthConfig()
       );
@@ -46,7 +46,7 @@ export const CartProvider = ({ children }) => {
   const updateCartQty = async (productId, action) => {
     try {
       const res = await axios.put(
-        "http://localhost:5000/api/cart/update",
+        "https://myapp-backend.onrender.com:5000/api/cart/update",
         { productId, action },
         getAuthConfig()
       );
@@ -60,7 +60,7 @@ export const CartProvider = ({ children }) => {
   const removeFromCart = async (productId) => {
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/cart/remove",
+        "https://myapp-backend.onrender.com:5000/api/cart/remove",
         { productId },
         getAuthConfig()
       );

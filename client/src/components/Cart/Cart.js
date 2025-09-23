@@ -14,7 +14,7 @@ const Cart = () => {
       if (!userEmail) return;
 
       try {
-        const res = await axios.get(`http://localhost:5000/api/cart/${userEmail}`);
+        const res = await axios.get(`https://myapp-backend.onrender.com:5000/api/cart/${userEmail}`);
         setCartFromDB(res.data.cart);
       } catch (err) {
         console.error("Error fetching cart:", err.response?.data || err.message);
