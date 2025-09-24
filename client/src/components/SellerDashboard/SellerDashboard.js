@@ -33,7 +33,7 @@ const SellerDashboard = ({ onPublish }) => {
     e.preventDefault();
     try {
       await axios.post(
-        "https://myapp-backend.onrender.com/api/books",
+        "https://booksstore-a617.onrender.com/api/books",
         book,
         { headers: { Authorization: `Bearer ${token}` } }
       );

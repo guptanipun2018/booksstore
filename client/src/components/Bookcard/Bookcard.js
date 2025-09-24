@@ -13,7 +13,7 @@ const Bookcard = ({ book }) => {
   const handleAddToCart = async () => {
     try {
       const res = await axios.post(
-        "https://myapp-backend.onrender.com/api/cart/add",
+        "https://booksstore-a617.onrender.com/api/cart/add",
         { product: { productId: book.id, title: book.title, qty: 1 } },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -26,7 +26,7 @@ const Bookcard = ({ book }) => {
   const handleUpdateCart = async (action) => {
     try {
       const res = await axios.put(
-        "https://myapp-backend.onrender.com/api/cart/update",
+        "https://booksstore-a617.onrender.com/api/cart/update",
         { productId: book.id, action }, // action: "increment" or "decrement"
         { headers: { Authorization: `Bearer ${token}` } }
       );
